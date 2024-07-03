@@ -35,3 +35,15 @@ resource "azurerm_storage_account" "storage-account" {
   }
 }
 
+module "private_endpoint" {
+  source = "/home/max/devops/modules/terraform-azurerm-caf-private-endpoint"
+  count = var.private_endpoint.deploy == true ? 1 : 0
+  name = "${local.storage_account-name}-pe"
+  location = var.location
+  resource_group = var.resource_group
+  subnet_id = var.private_endpoint.subnet_id
+  private_connection_resource_id = azurerm_storage_account.storage-account.id
+  subresource_names = var.private_endpoint.subresource_names
+
+
+}

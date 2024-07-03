@@ -1,5 +1,3 @@
-## Root module in ESLZ
-
 variable "storageaccounts" {
   description = "Storage accounts to deploy"
   type        = any
@@ -20,7 +18,6 @@ locals {
         "${i.userDefinedString}${j}" => local.subnets[j].id
     }
   ]
-  
 }
 
 # Need to use count instead of for_each to control access to both objects at the same time
@@ -34,5 +31,12 @@ module "storage-account" {
   resource_group = local.resource_groups_L2.Project
   storage_account = local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]]
   subnet_id = values(local.subnet_ids[count.index])
+
+  private_endpoint = {
+    deploy = local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].private_endpoint.deploy
+    subnet_id = local.subnets[local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].private_endpoint.subnet_name].id
+    subresource_names = local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].private_endpoint.subresource_name
+  }
+
   tags = var.tags
 }
