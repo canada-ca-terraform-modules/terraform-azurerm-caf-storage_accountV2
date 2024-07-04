@@ -1,58 +1,40 @@
 storageaccounts = [
   {
-    deploy = true 
-    userDefinedString = "maxTest"
-    account_tier = "Standard"
-    account_kind = "StorageV2"
-    account_replication_type = "GRS"
+    deploy                          = true
+    userDefinedString               = "example01"
+    account_tier                    = "Standard"
+    account_kind                    = "StorageV2"
+    account_replication_type        = "GRS"
     allow_nested_items_to_be_public = false
-    
-    private_endpoint = {
-      deploy = false
-      subnet_name = "OZ"
-      subresource_name = ["file"]
-    }
+    public_network_access_enabled   = false
+    static_website                  = true
 
-    # network_rules = {
-    #   default_action = "Deny"
-    #   ip_rules = []
-    #   virtual_network_subnet = ["OZ", "MAZ"]
-    #   bypass = ["AzureServices"]
-    # }
-  }, 
-  {
-    deploy = true
-    userDefinedString = "testetst"
-    account_tier = "Standard"
-    account_kind = "StorageV2"
-    account_replication_type = "GRS"
-    allow_nested_items_to_be_public = false
-    
     private_endpoint = {
-      deploy = true
-      subnet_name = "MAZ"
-      subresource_name = ["file"]
+      deploy           = true
+      subnet_name      = "OZ"
+      subresource_name = ["blob"]
     }
-    # network_rules = {
-    #   default_action = "Deny"
-    #   ip_rules = []
-    #   virtual_network_subnet = ["OZ"]
-    #   bypass = ["AzureServices"]
-    # }
   },
   {
-    deploy = false 
-    userDefinedString = "something"
-    account_tier = "Standard"
-    account_kind = "BlobStorage"
-    account_replication_type = "GRS"
+    deploy                          = true
+    userDefinedString               = "example02"
+    account_tier                    = "Standard"
+    account_kind                    = "StorageV2"
+    account_replication_type        = "GRS"
     allow_nested_items_to_be_public = false
+    public_network_access_enabled   = true
+
+    private_endpoint = {
+      deploy           = true
+      subnet_name      = "MAZ"
+      subresource_name = ["blob"]
+    }
 
     network_rules = {
-      default_action = "Deny"
-      ip_rules = []
-      virtual_network_subnet = ["PAZ", "MAZ"]
-      bypass = ["AzureServices"]
+      default_action         = "Deny"
+      ip_rules               = ["20.116.129.177"]
+      virtual_network_subnet = []
+      bypass                 = ["AzureServices"]
     }
   }
 ]

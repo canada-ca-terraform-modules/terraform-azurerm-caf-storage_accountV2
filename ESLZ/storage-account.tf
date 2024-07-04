@@ -22,7 +22,7 @@ locals {
 
 # Need to use count instead of for_each to control access to both objects at the same time
 module "storage-account" {
-  source   = "/home/max/devops/modules/terraform-azurerm-caf-storage-accountv2"
+  source   = "/home/max/devops/modules/terraform-azurerm-caf-storage_accountV2"
   count = length(local.storage-account-deploy-list)
 
   userDefinedString = local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].userDefinedString
@@ -30,13 +30,8 @@ module "storage-account" {
   env = var.env
   resource_group = local.resource_groups_L2.Project
   storage_account = local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]]
-  subnet_id = values(local.subnet_ids[count.index])
-
-  private_endpoint = {
-    deploy = local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].private_endpoint.deploy
-    subnet_id = local.subnets[local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].private_endpoint.subnet_name].id
-    subresource_names = local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].private_endpoint.subresource_name
-  }
-
+  network_rule_subnet_id = values(local.subnet_ids[count.index])
+  pe_subnet_id = try(local.subnets[local.storage-account-deploy-list[keys(local.storage-account-deploy-list)[count.index]].private_endpoint.subnet_name].id, "")
   tags = var.tags
 }
+
