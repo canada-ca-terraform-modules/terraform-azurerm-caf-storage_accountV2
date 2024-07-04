@@ -13,19 +13,27 @@ resource "azurerm_storage_account" "storage-account" {
   min_tls_version                  = try(var.storage_account.min_tls_version, "TLS1_2")
   allow_nested_items_to_be_public  = try(var.storage_account.allow_nested_items_to_be_public, false)
   shared_access_key_enabled        = try(var.storage_account.shared_access_key_enabled, true)
-  public_network_access_enabled    = try(var.storage_account.public_network_access_enabled, true)
+  public_network_access_enabled    = try(var.storage_account.public_network_access_enabled, false)
   default_to_oauth_authentication  = try(var.storage_account.default_to_oauth_authentication, false)
   is_hns_enabled                   = try(var.storage_account.is_hns_enabled, false)
   nfsv3_enabled                    = try(var.storage_account.nfsv3_enabled, false)
   cross_tenant_replication_enabled = try(var.storage_account.cross_tenant_replication_enabled, true)
 
+  # Network rules
   network_rules {
     default_action             = try(var.storage_account.network_rules.default_action, "Deny")
     ip_rules                   = try(var.storage_account.network_rules.ip_rules, [])
-    virtual_network_subnet_ids = var.subnet_id
+    virtual_network_subnet_ids = var.network_rule_subnet_id
     bypass                     = try(var.storage_account.network_rules.bypass, null)
   }
 
+  # Static website
+  dynamic "static_website" {
+    for_each = try(var.storage_account.static_website, "false") == true ? [1] : []
+    content {
+      index_document = "index.html"
+    }
+  }
 
   # Tags
   tags = var.tags
@@ -37,11 +45,11 @@ resource "azurerm_storage_account" "storage-account" {
 
 module "private_endpoint" {
   source = "/home/max/devops/modules/terraform-azurerm-caf-private-endpoint"
-  count = var.private_endpoint.deploy == true ? 1 : 0
+  count = try(var.storage_account.private_endpoint.deploy) == true ? 1 : 0
   name = "${local.storage_account-name}-pe"
   location = var.location
   resource_group = var.resource_group
-  subnet_id = var.private_endpoint.subnet_id
+  subnet_id = var.pe_subnet_id
   private_connection_resource_id = azurerm_storage_account.storage-account.id
-  subresource_names = var.private_endpoint.subresource_names
+  subresource_names = var.storage_account.private_endpoint.subresource_name
 }

@@ -31,13 +31,13 @@ variable "storage_account" {
   default = {}
 }
 
-variable "subnet_id" {
+variable "network_rule_subnet_id" {
   description = "Subnet IDs for network rules if applicable"
   type = any
   default = {}
 }
 
-variable "private_endpoint" {
+variable "pe_subnet_id" {
   description = "Info about the possible private endpoint associated with the storage account"
   type = any
   default = {}
