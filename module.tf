@@ -20,7 +20,7 @@ resource "azurerm_storage_account" "storage-account" {
   cross_tenant_replication_enabled = try(var.storage_account.cross_tenant_replication_enabled, true)
 
   network_rules {
-    default_action             = try(var.storage_account.network_rules.default_action, "Allow")
+    default_action             = try(var.storage_account.network_rules.default_action, "Deny")
     ip_rules                   = try(var.storage_account.network_rules.ip_rules, [])
     virtual_network_subnet_ids = var.subnet_id
     bypass                     = try(var.storage_account.network_rules.bypass, null)
@@ -44,6 +44,4 @@ module "private_endpoint" {
   subnet_id = var.private_endpoint.subnet_id
   private_connection_resource_id = azurerm_storage_account.storage-account.id
   subresource_names = var.private_endpoint.subresource_names
-
-
 }
