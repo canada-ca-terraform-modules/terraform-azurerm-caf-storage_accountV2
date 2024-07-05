@@ -23,7 +23,7 @@ resource "azurerm_storage_account" "storage-account" {
   network_rules {
     default_action             = try(var.storage_account.network_rules.default_action, "Deny")
     ip_rules                   = try(var.storage_account.network_rules.ip_rules, [])
-    virtual_network_subnet_ids = var.network_rule_subnet_id
+    virtual_network_subnet_ids = local.virtual_network_subnet_ids
     bypass                     = try(var.storage_account.network_rules.bypass, null)
   }
 
@@ -45,11 +45,12 @@ resource "azurerm_storage_account" "storage-account" {
 
 module "private_endpoint" {
   source = "/home/max/devops/modules/terraform-azurerm-caf-private-endpoint"
-  count = try(var.storage_account.private_endpoint.deploy) == true ? 1 : 0
-  name = "${local.storage_account-name}-pe"
+  for_each =  try(var.storage_account.private_endpoint, {}) 
+
+  name = "${local.storage_account-name}-${each.key}"
   location = var.location
   resource_group = var.resource_group
-  subnet_id = var.pe_subnet_id
+  subnets = var.subnets
   private_connection_resource_id = azurerm_storage_account.storage-account.id
-  subresource_names = var.storage_account.private_endpoint.subresource_name
+  private_endpoint = each.value
 }

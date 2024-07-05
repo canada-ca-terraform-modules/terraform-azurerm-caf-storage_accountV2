@@ -26,13 +26,13 @@ variable "location" {
 }
 
 variable "storage_account" {
-  description = "Object describing the storage account"
+  description = " (Required) Object describing the storage account"
   type = any
   default = {}
 }
 
-variable "network_rule_subnet_id" {
-  description = "Subnet IDs for network rules if applicable"
+variable "subnets" {
+  description = "List of subnets objects"
   type = any
   default = {}
 }
