@@ -37,8 +37,7 @@ variable "subnets" {
   default = {}
 }
 
-variable "pe_subnet_id" {
-  description = "Info about the possible private endpoint associated with the storage account"
+variable "private_endpoint" {
   type = any
   default = {}
 }
