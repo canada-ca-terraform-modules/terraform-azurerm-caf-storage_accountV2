@@ -1,7 +1,7 @@
 resource "azurerm_storage_account" "storage-account" {
   # Required parameters
   name                     = local.storage_account-name
-  resource_group_name      = var.resource_group[var.storage_account.resource_group_name].name
+  resource_group_name      = local.resource_group_name
   location                 = var.location
   account_tier             = var.storage_account.account_tier
   account_replication_type = var.storage_account.account_replication_type
@@ -49,9 +49,10 @@ module "private_endpoint" {
 
   name = "${local.storage_account-name}-${each.key}"
   location = var.location
-  resource_group = var.resource_group
+  resource_groups = var.resource_groups
   subnets = var.subnets
   private_connection_resource_id = azurerm_storage_account.storage-account.id
   private_endpoint = each.value
+  private_dns_zone_id = var.private_dns_zone_ids[each.value.local_dns_zone]
   tags = var.tags
 }

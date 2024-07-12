@@ -14,7 +14,7 @@ variable "env" {
   type = string
 }
 
-variable "resource_group" {
+variable "resource_groups" {
   description = "(Required) Resource group object of the storage account"
   type = any
 }
@@ -37,7 +37,14 @@ variable "subnets" {
   default = {}
 }
 
+variable "private_dns_zone_ids" {
+  description = "Object containing the private DNS zone IDs of the subscription. Used to configure private endpoints"
+  type = any
+  default = {}
+}
+
 variable "private_endpoint" {
+  description = "Object containing parameter a private endpoint"
   type = any
   default = {}
 }
