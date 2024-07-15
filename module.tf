@@ -45,7 +45,7 @@ resource "azurerm_storage_account" "storage-account" {
 
 # Calls this module if we need a private endpoint attached to the storage account
 module "private_endpoint" {
-  source = "/home/max/devops/modules/terraform-azurerm-caf-private-endpoint"
+  source = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git"
   for_each =  try(var.storage_account.private_endpoint, {}) 
 
   name = "${local.storage_account-name}-${each.key}"

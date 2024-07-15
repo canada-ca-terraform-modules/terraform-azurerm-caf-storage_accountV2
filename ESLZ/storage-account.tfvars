@@ -15,24 +15,24 @@ storageaccounts = {
     is_hns_enabled                   = false       # Optional: Possible values: true, false. Default: false
     nfsv3_enabled                    = false       # Optional: Possible values: true, false. Default: false
     cross_tenant_replication_enabled = true        # Optional: Possible values: true, false. Default: true
-    
-    static_website                   = false       # Optional: Set to true to enable static website with an index.html file. Default: false
+
+    static_website = false # Optional: Set to true to enable static website with an index.html file. Default: false
 
     # Optional: Set network rules for the storage account. public_network_access_enabled needs to be true for this block to be valid
     network_rules = {
-      default_action = "Deny"                      # Default: Deny
-      ip_rules = []                                # List of IP permitted to access the storage account
-      virtual_network_subnet_ids = ["MAZ", "OZ"]   # List of subnet permitted to access the storage account. Values can either be name, i.e MAZ, OZ, etc, or subnet ID
-      bypass = ["AzureServices"]                   # List of Services/resources allowed to bypass firewall.
+      default_action             = "Deny"            # Default: Deny
+      ip_rules                   = []                # List of IP permitted to access the storage account
+      virtual_network_subnet_ids = ["MAZ", "OZ"]     # List of subnet permitted to access the storage account. Values can either be name, i.e MAZ, OZ, etc, or subnet ID
+      bypass                     = ["AzureServices"] # List of Services/resources allowed to bypass firewall.
     }
 
     # Optional: Defines a private endpoint for the storage account
     private_endpoint = {
-      blob = {                                                        # Key defines the userDefinedstring
-        resource_group    = "Project"                                 # Required: Resource group name, i.e Project, Management, DNS, etc, or the resource group ID
-        subnet_name       = "OZ"                                      # Required: Subnet name, i.e OZ,MAZ, etc, or the subnet ID
-        subresource_names = ["blob"]                                  # Required: Subresource name determines to what service the private endpoint will connect to. see: https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource for list of subresrouce
-        local_dns_zone    = "privatelink.blob.core.windows.net"       # Optional: Name of the local DNS zone for the private endpoint
+      blob = {                                                  # Key defines the userDefinedstring
+        resource_group    = "Project"                           # Required: Resource group name, i.e Project, Management, DNS, etc, or the resource group ID
+        subnet_name       = "OZ"                                # Required: Subnet name, i.e OZ,MAZ, etc, or the subnet ID
+        subresource_names = ["blob"]                            # Required: Subresource name determines to what service the private endpoint will connect to. see: https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource for list of subresrouce
+        local_dns_zone    = "privatelink.blob.core.windows.net" # Optional: Name of the local DNS zone for the private endpoint
       }
     }
   }
