@@ -1,49 +1,39 @@
 storageaccounts = {
- example01 = {
-    resource_group_name = "Project"
-    account_tier = "Standard"
-    account_kind = "StorageV2"
-    account_replication_type = "GRS"
-    allow_nested_items_to_be_public = false
-    public_network_access_enabled = false
-    static_website = false
-    
-    private_endpoint = {
-      blob = {
-        resource_group_name = "Project"
-        subnet_name = "OZ"
-        subresource_names = ["blob"]
-        local_dns_zone = {
-          name = "privatelink.blob.core.windows.net"
-          # resource_group_name = "DNS"
-          # vnetID = "/subscriptions/723c47ad-1a6f-437f-ac31-e21989a464f7/resourceGroups/ScSc-CPMS_MMahdavian_Network-rg/providers/Microsoft.Network/virtualNetworks/ScScCNR-CPMS_MMahdavian-vnet"
-          registration_enabled = false
-          # soa_record = {
-          #   email = "maxime.mahdavianssc-spc.gc.ca"
-          # }
-        }
-      }
-    }
-  }, 
-  example02 = {
-    account_tier = "Standard"
-    account_kind = "StorageV2"
-    account_replication_type = "GRS"
-    allow_nested_items_to_be_public = false
-    public_network_access_enabled = true
-    
-    # private_endpoint = {
-    #   deploy = true
-    #   subnet_name = "MAZ"
-    #   subresource_name = ["blob"]
-    # }
+  example01 = {                           # Key defines the userDefinedString
+    resource_group           = "Project"  # Required: Resource group name, i.e Project, Management, DNS, etc, or the resource group ID
+    account_tier             = "Standard" # Required: Possible values: Standard,Premium
+    account_replication_type = "GRS"      # Required: Possible values: LRS, GRS, RAGRS, ZRS, GZRS, RAGZRS
 
+    account_kind                     = "StorageV2" # Optional: possible values: BlobStorage, BlockBlobStorage, FileStorage, Storage, StorageV2. Default: StorageV2
+    access_tier                      = "Hot"       # Optional: Possible values: Hot, Cool. Default: Hot
+    enable_https_traffic_only        = true        # Optional: Possible values: true, false. Default: true 
+    min_tls_version                  = "TLS1_2"    # Optional: Possible values: TLS1_0, TLS1_1, TLS1_2. Default: trueTLS1_2
+    allow_nested_items_to_be_public  = false       # Optional: Possible values: true, false. Default: false
+    shared_access_key_enabled        = true        # Optional: Possible values: true, false. Default: true
+    public_network_access_enabled    = false       # Optional: Possible values: true, false. Default: false
+    default_to_oauth_authentication  = false       # Optional: Possible values: true, false. Default: false
+    is_hns_enabled                   = false       # Optional: Possible values: true, false. Default: false
+    nfsv3_enabled                    = false       # Optional: Possible values: true, false. Default: false
+    cross_tenant_replication_enabled = true        # Optional: Possible values: true, false. Default: true
+    
+    static_website                   = false       # Optional: Set to true to enable static website with an index.html file. Default: false
+
+    # Optional: Set network rules for the storage account. public_network_access_enabled needs to be true for this block to be valid
     network_rules = {
-      default_action = "Deny"
-      ip_rules = []
-      virtual_network_subnet = ["MAZ", 
-      "/subscriptions/723c47ad-1a6f-437f-ac31-e21989a464f7/resourceGroups/ScSc-CPMS_MMahdavian_Network-rg/providers/Microsoft.Network/virtualNetworks/ScScCNR-CPMS_MMahdavian-vnet/subnets/ScScCNR-CPMS_MMahdavian_OZ-snet"]
-      bypass = ["AzureServices"]
+      default_action = "Deny"                      # Default: Deny
+      ip_rules = []                                # List of IP permitted to access the storage account
+      virtual_network_subnet_ids = ["MAZ", "OZ"]   # List of subnet permitted to access the storage account. Values can either be name, i.e MAZ, OZ, etc, or subnet ID
+      bypass = ["AzureServices"]                   # List of Services/resources allowed to bypass firewall.
+    }
+
+    # Optional: Defines a private endpoint for the storage account
+    private_endpoint = {
+      blob = {                                                        # Key defines the userDefinedstring
+        resource_group    = "Project"                                 # Required: Resource group name, i.e Project, Management, DNS, etc, or the resource group ID
+        subnet_name       = "OZ"                                      # Required: Subnet name, i.e OZ,MAZ, etc, or the subnet ID
+        subresource_names = ["blob"]                                  # Required: Subresource name determines to what service the private endpoint will connect to. see: https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource for list of subresrouce
+        local_dns_zone    = "privatelink.blob.core.windows.net"       # Optional: Name of the local DNS zone for the private endpoint
+      }
     }
   }
 }

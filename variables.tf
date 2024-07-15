@@ -44,7 +44,7 @@ variable "private_dns_zone_ids" {
 }
 
 variable "private_endpoint" {
-  description = "Object containing parameter a private endpoint"
+  description = "Object containing parameter to the private endpoint attached to the storage account"
   type = any
   default = {}
 }

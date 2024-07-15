@@ -43,6 +43,7 @@ resource "azurerm_storage_account" "storage-account" {
   }
 }
 
+# Calls this module if we need a private endpoint attached to the storage account
 module "private_endpoint" {
   source = "/home/max/devops/modules/terraform-azurerm-caf-private-endpoint"
   for_each =  try(var.storage_account.private_endpoint, {}) 
@@ -53,6 +54,6 @@ module "private_endpoint" {
   subnets = var.subnets
   private_connection_resource_id = azurerm_storage_account.storage-account.id
   private_endpoint = each.value
-  private_dns_zone_id = try(var.private_dns_zone_ids[each.value.local_dns_zone], null)
+  private_dns_zone_ids = var.private_dns_zone_ids
   tags = var.tags
 }
