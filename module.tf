@@ -53,6 +53,6 @@ module "private_endpoint" {
   subnets = var.subnets
   private_connection_resource_id = azurerm_storage_account.storage-account.id
   private_endpoint = each.value
-  private_dns_zone_id = var.private_dns_zone_ids[each.value.local_dns_zone]
+  private_dns_zone_id = try(var.private_dns_zone_ids[each.value.local_dns_zone], null)
   tags = var.tags
 }
