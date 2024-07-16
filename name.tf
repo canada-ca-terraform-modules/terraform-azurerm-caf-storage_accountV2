@@ -1,4 +1,5 @@
 ## Variables responsible for formatting the name of the storage account using the userDefinedString input variable
+## unique_8 is needed to ensure that storage accounts have a unique name
 locals {
   unique_8                                             = substr(sha1(local.resource_group_id), 0, 8)
   storage_account-regex                                = "/[^0-9a-z]/" # Anti-pattern to match all characters not in: 0-9 a-z
