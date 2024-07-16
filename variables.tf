@@ -17,6 +17,7 @@ variable "env" {
 variable "resource_groups" {
   description = "(Required) Resource group object of the storage account"
   type = any
+  default = {}
 }
 
 variable "location" {
