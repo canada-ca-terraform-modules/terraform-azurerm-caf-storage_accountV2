@@ -35,8 +35,8 @@ resource "azurerm_storage_account" "storage-account" {
     }
   }
 
-  # Tags
-  tags = var.tags
+  # Tags - Merging tags provided by ESLZ with tags provided by the user
+  tags = merge(var.tags, try(var.storage_account.tags, {}))
 
   lifecycle {
     ignore_changes = [tags, ]
