@@ -5,7 +5,7 @@ variable "storageaccounts" {
 }
 
 module "storage-account" {
-  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-storage_accountV2.git?ref=v1.0.1"
+  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-storage_accountV2.git?ref=v1.0.2"
   for_each = var.storageaccounts
 
   userDefinedString = each.key

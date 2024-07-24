@@ -64,4 +64,5 @@ For more information about storage account parameters, refer to the terraform do
 | <a name="cross_tenant_replication_enabled"></a> [cross_tenant_replication_enabled](#cross\_tenant\_replication\_enabled) | true, false | true | no |
 | <a name="static_website"></a> [static_website](#static\_website) | true, false | false | no |
 | <a name="network_rules"></a> [network_rules](#network\_rules) | See terraform docs | null | no |
+| <a name="sas_policies"></a> [sas_policies](#sas\_policies) | See terraform docs | null | no |
 | <a name="private_endpoint"></a> [private_endpoint](#private\_endpoint) | See private_endpoint module docs | null | no |

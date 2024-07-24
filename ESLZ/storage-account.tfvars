@@ -24,7 +24,13 @@ storageaccounts = {
     #   default_action             = "Deny"            # Default: Deny
     #   ip_rules                   = []                # List of IP permitted to access the storage account
     #   virtual_network_subnet_ids = ["MAZ", "OZ"]     # List of subnet permitted to access the storage account. Values can either be name, i.e MAZ, OZ, etc, or subnet ID
-    #   bypass                     = ["AzureServices"] # List of Services/resources allowed to bypass firewall.
+    #   bypass                     = ["AzureServices"] # Default: AzureServices. List of Services/resources allowed to bypass firewall.
+    # }
+
+    # Sets SAS policies, only valid if the shared_access_key_enabled is set to true
+    #sas_policy = {
+    #   expiration_period = "90.00:00:00"              # Required: Format for the period is DD.HH:MM:SS
+    #   expiration_action = "Log"                      # Optional: Only possible value is Log
     # }
 
     # Optional: Defines a private endpoint for the storage account
