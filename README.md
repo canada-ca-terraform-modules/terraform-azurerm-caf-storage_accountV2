@@ -56,7 +56,7 @@ For more information about storage account parameters, refer to the terraform do
 | <a name="enable_https_traffic_only"></a> [enable_https_traffic_only](#enable\_https\_traffic\_only) | true, false | true | no |
 | <a name="min_tls_version"></a> [min_tls_version](#min\_tls\_version) | TLS1_0, TLS1_1, TLS1_2 | TLS1_2 | no |
 | <a name="allow_nested_items_to_be_public"></a> [allow_nested_items_to_be_public](#allow\_nested\_items\_to\_be\_public) | true, false | false | no |
-| <a name="shared_access_key_enabled"></a> [shared_access_key_enabled](#shared\_access\_key\_enabled) | true, false | true | no |
+| <a name="shared_access_key_enabled"></a> [shared_access_key_enabled](#shared\_access\_key\_enabled) | true, false | false | no |
 | <a name="public_network_access_enabled"></a> [public_network_access_enabled](#public\_network\_access\_enabled) | true, false | false | no |
 | <a name="default_to_oauth_authentication"></a> [default_to_oauth_authentication](#default\_to\_oauth\_authentication) | true, false | false | no |
 | <a name="is_hns_enabled"></a> [is_hns_enabled](#is\_hns\_enabled) | true, false | false | no |

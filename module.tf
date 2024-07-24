@@ -12,7 +12,7 @@ resource "azurerm_storage_account" "storage-account" {
   enable_https_traffic_only        = try(var.storage_account.enable_https_traffic_only, true)
   min_tls_version                  = try(var.storage_account.min_tls_version, "TLS1_2")
   allow_nested_items_to_be_public  = try(var.storage_account.allow_nested_items_to_be_public, false)
-  shared_access_key_enabled        = try(var.storage_account.shared_access_key_enabled, true)
+  shared_access_key_enabled        = try(var.storage_account.shared_access_key_enabled, false)
   public_network_access_enabled    = try(var.storage_account.public_network_access_enabled, false)
   default_to_oauth_authentication  = try(var.storage_account.default_to_oauth_authentication, false)
   is_hns_enabled                   = try(var.storage_account.is_hns_enabled, false)
@@ -24,7 +24,7 @@ resource "azurerm_storage_account" "storage-account" {
     default_action             = try(var.storage_account.network_rules.default_action, "Deny")
     ip_rules                   = try(var.storage_account.network_rules.ip_rules, [])
     virtual_network_subnet_ids = local.virtual_network_subnet_ids
-    bypass                     = try(var.storage_account.network_rules.bypass, null)
+    bypass                     = try(var.storage_account.network_rules.bypass, ["AzureServices"])
   }
 
   # Static website
@@ -32,6 +32,15 @@ resource "azurerm_storage_account" "storage-account" {
     for_each = try(var.storage_account.static_website, "false") == true ? [1] : []
     content {
       index_document = "index.html"
+    }
+  }
+
+  # SAS  policy - only valid is shared key access is enabled
+  dynamic "sas_policy" {
+    for_each = try(var.storage_account.shared_access_key_enabled, false) == true ? [1] : []
+    content {
+      expiration_action = try(var.storage_account.sas_policy.expiration_action, "Log")            # Only possible value if Log, setting it as a variable in case this changes
+      expiration_period = try(var.storage_account.sas_policy.expiration_period, "90.00:00:00")    # Format for expiration period is DD.HH:MM:SS. Default to 90 days
     }
   }
 
