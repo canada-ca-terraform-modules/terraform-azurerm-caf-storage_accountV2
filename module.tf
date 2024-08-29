@@ -9,7 +9,7 @@ resource "azurerm_storage_account" "storage-account" {
   # Optional parameters
   account_kind                     = try(var.storage_account.account_kind, "StorageV2")
   access_tier                      = try(var.storage_account.access_tier, "Hot")
-  enable_https_traffic_only        = try(var.storage_account.enable_https_traffic_only, true)
+  https_traffic_only_enabled        = try(var.storage_account.https_traffic_only_enabled, true)
   min_tls_version                  = try(var.storage_account.min_tls_version, "TLS1_2")
   allow_nested_items_to_be_public  = try(var.storage_account.allow_nested_items_to_be_public, false)
   shared_access_key_enabled        = try(var.storage_account.shared_access_key_enabled, false)
