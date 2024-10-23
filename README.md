@@ -1,6 +1,6 @@
 ## Requirements
 
-No requirements.
+terraform versions 1.9.1+  (terragrunt 0.68.4+) in modules/main.tf and L2 version files
 
 ## Providers
 
