@@ -47,14 +47,11 @@ resource "azurerm_storage_account" "storage-account" {
   # Tags - Merging tags provided by ESLZ with tags provided by the user
   tags = merge(var.tags, try(var.storage_account.tags, {}))
 
-  lifecycle {
-    ignore_changes = [tags, ]
-  }
 }
 
 # Calls this module if we need a private endpoint attached to the storage account
 module "private_endpoint" {
-  source = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.0.1"
+  source = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.0.2"
   for_each =  try(var.storage_account.private_endpoint, {}) 
 
   name = "${local.storage_account-name}-${each.key}"
