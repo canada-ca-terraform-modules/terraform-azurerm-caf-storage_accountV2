@@ -47,6 +47,7 @@ resource "azurerm_storage_account" "storage-account" {
   # Tags - Merging tags provided by ESLZ with tags provided by the user
   tags = merge(var.tags, try(var.storage_account.tags, {}))
 
+  # Private link access gets added by policy, ignoring changes to better fit with it
   lifecycle {
     ignore_changes = [ network_rules[0].private_link_access ]
   }
