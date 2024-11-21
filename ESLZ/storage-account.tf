@@ -14,6 +14,6 @@ module "storage-account" {
   resource_groups = local.resource_groups_all
   storage_account = each.value
   subnets = local.subnets
-  private_dns_zone_ids = local.private_dns_zone_ids
+  private_dns_zone_ids = local.Project-dns-zone
   tags = var.tags
 }
