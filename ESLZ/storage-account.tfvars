@@ -33,6 +33,14 @@ storageaccounts = {
     #   expiration_action = "Log"                      # Optional: Only possible value is Log
     # }
 
+    # Optional: Configure blob service properties
+    # blob_properties = {
+    #   delete_retention_policy = {
+    #     days                     = 7     # Optional: Number of days to retain soft-deleted blobs
+    #     permanent_delete_enabled = false # Optional: Enable permanent deletion for soft-deleted blobs
+    #   }
+    # }
+
     # Optional: Defines a private endpoint for the storage account
     # Can be commented out if no private endpoint is required
     private_endpoint = {
