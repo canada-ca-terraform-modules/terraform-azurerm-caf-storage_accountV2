@@ -1,10 +1,10 @@
 ## Requirements
 
-terraform versions 1.9.1+  (terragrunt 0.68.4+) in modules/main.tf and L2 version files
+Terraform >= 1.9 (terragrunt 0.68.4+) · azurerm provider `~> 4.0`
 
 ## Providers
 
-| Name | 
+| Name |
 |------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) |
 
@@ -12,7 +12,7 @@ terraform versions 1.9.1+  (terragrunt 0.68.4+) in modules/main.tf and L2 versio
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_private_endpoint"></a> [private\_endpoint](#module\_private\_endpoint) | /home/max/devops/modules/terraform-azurerm-caf-private-endpoint | n/a |
+| <a name="module_private_endpoint"></a> [private\_endpoint](#module\_private\_endpoint) | github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint | v1.0.2 |
 
 ## Resources
 
@@ -24,45 +24,81 @@ terraform versions 1.9.1+  (terragrunt 0.68.4+) in modules/main.tf and L2 versio
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-|<a name="input_userDefinedString"></a> [userDefinedString](#input\_userDefinedString) | (Required) UserDefinedString part of the name of the storage account | `string` | n/a | yes |
-| <a name="input_env"></a> [env](#input\_env) | (Required) env value | `string` | n/a | yes |
-| <a name="input_resource_groups"></a> [resource\_groups](#input\_resource\_groups) | (Required) Resource group object of the storage account | `any` | n/a | yes |
-| <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | (Required) Object describing the storage account | `any` | `{}` | yes |
-| <a name="input_location"></a> [location](#input\_location) | Azure location where the storage account will be situated | `string` | `"canadacentral"` | no |
-| <a name="input_private_dns_zone_ids"></a> [private\_dns\_zone\_ids](#input\_private\_dns\_zone\_ids) | Object containing the private DNS zone IDs of the subscription. Used to configure private endpoints | `any` | `{}` | no |
-| <a name="input_private_endpoint"></a> [private\_endpoint](#input\_private\_endpoint) | Object containing parameter to private endpoint | `any` | `{}` | no |
-| <a name="input_subnets"></a> [subnets](#input\_subnets) | List of subnets objects | `any` | `{}` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags to be applied to the storage account | `map(string)` | `{}` | no |
-| 
+| <a name="input_userDefinedString"></a> [userDefinedString](#input\_userDefinedString) | UserDefinedString part of the name of the storage account | `string` | n/a | yes |
+| <a name="input_env"></a> [env](#input\_env) | env value used in name generation | `string` | n/a | yes |
+| <a name="input_resource_groups"></a> [resource\_groups](#input\_resource\_groups) | Resource group object map provided by ESLZ | `any` | `{}` | no |
+| <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Object describing the storage account (see TFVars Parameters below) | `any` | `{}` | no |
+| <a name="input_location"></a> [location](#input\_location) | Azure location | `string` | `"canadacentral"` | no |
+| <a name="input_subnets"></a> [subnets](#input\_subnets) | Subnet object map provided by ESLZ | `any` | `{}` | no |
+| <a name="input_private_dns_zone_ids"></a> [private\_dns\_zone\_ids](#input\_private\_dns\_zone\_ids) | Private DNS zone IDs for private endpoints | `any` | `{}` | no |
+| <a name="input_private_endpoint"></a> [private\_endpoint](#input\_private\_endpoint) | Private endpoint parameters | `any` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to all resources (merged with storage_account.tags) | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_id"></a> [id](#output\_id) | Returns the ID of the storage account |
-| <a name="output_name"></a> [name](#output\_name) | Returns the name of the storage account |
-| <a name="output_storage-account-object"></a> [storage-account-object](#output\_storage-account-object) | Returns the Azure Storage Account object |
+| <a name="output_id"></a> [id](#output\_id) | ID of the storage account |
+| <a name="output_name"></a> [name](#output\_name) | Name of the storage account |
+| <a name="output_storage-account-object"></a> [storage-account-object](#output\_storage-account-object) | Full storage account object (sensitive) |
 
 ## TFVars Parameters
 
-For more information about storage account parameters, refer to the terraform docs: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
-| Name | Possible values | Default | Required |
-|------|----------|----------------|---------|
-| <a name="resource_group"></a> [resource_group](#resource\_group) | Resource group name, i.e Project, Managment, DNS, etc, or resource group ID | n/a | yes |
-| <a name="account_tier"></a> [account tier](#account\_tier) | Standard, Premium | n/a | yes |
-| <a name="account_replication_type"></a> [account_replication_type](#account\_replication\_type)  | LRS, GRS, RAGRS, ZRS, GZRS, RAGZRS | n/a | yes |
-| <a name="account_kind"></a> [account_kind](#account\_kind) | BlobStorage, BlockBlobStorage, FileStorage, Storage, StorageV2 | StorageV2 | no |
-| <a name="access_tier"></a> [access_tier](#access\_tier) | Hot, Cool | Hot | no |
-| <a name="enable_https_traffic_only"></a> [enable_https_traffic_only](#enable\_https\_traffic\_only) | true, false | true | no |
-| <a name="min_tls_version"></a> [min_tls_version](#min\_tls\_version) | TLS1_0, TLS1_1, TLS1_2 | TLS1_2 | no |
-| <a name="allow_nested_items_to_be_public"></a> [allow_nested_items_to_be_public](#allow\_nested\_items\_to\_be\_public) | true, false | false | no |
-| <a name="shared_access_key_enabled"></a> [shared_access_key_enabled](#shared\_access\_key\_enabled) | true, false | false | no |
-| <a name="public_network_access_enabled"></a> [public_network_access_enabled](#public\_network\_access\_enabled) | true, false | false | no |
-| <a name="default_to_oauth_authentication"></a> [default_to_oauth_authentication](#default\_to\_oauth\_authentication) | true, false | false | no |
-| <a name="is_hns_enabled"></a> [is_hns_enabled](#is\_hns\_enabled) | true, false | false | no |
-| <a name="nfsv3_enabled"></a> [nfsv3_enabled](#nfsv3\_enabled) | true, false | false | no |
-| <a name="cross_tenant_replication_enabled"></a> [cross_tenant_replication_enabled](#cross\_tenant\_replication\_enabled) | true, false | true | no |
-| <a name="static_website"></a> [static_website](#static\_website) | true, false | false | no |
-| <a name="network_rules"></a> [network_rules](#network\_rules) | See terraform docs | null | no |
-| <a name="sas_policies"></a> [sas_policies](#sas\_policies) | See terraform docs | null | no |
-| <a name="private_endpoint"></a> [private_endpoint](#private\_endpoint) | See private_endpoint module docs | null | no |
+For full provider documentation see: <https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account>
+
+All parameters are set inside the `storage_account` object key in your tfvars.
+
+### Required
+
+| Name | Possible values | Notes |
+|------|----------------|-------|
+| `resource_group` | RG name (e.g. `Project`) or full resource ID | |
+| `account_tier` | `Standard`, `Premium` | |
+| `account_replication_type` | `LRS`, `GRS`, `RAGRS`, `ZRS`, `GZRS`, `RAGZRS` | Some changes force new resource |
+
+### Optional — simple values
+
+| Name | Possible values | Default |
+|------|----------------|---------|
+| `account_kind` | `BlobStorage`, `BlockBlobStorage`, `FileStorage`, `Storage`, `StorageV2` | `StorageV2` |
+| `access_tier` | `Hot`, `Cool`, `Cold`, `Premium` | `Hot` |
+| `https_traffic_only_enabled` | `true`, `false` | `true` |
+| `min_tls_version` | `TLS1_0`, `TLS1_1`, `TLS1_2` | `TLS1_2` |
+| `allow_nested_items_to_be_public` | `true`, `false` | `false` |
+| `shared_access_key_enabled` | `true`, `false` | `false` |
+| `public_network_access_enabled` | `true`, `false` | `false` |
+| `default_to_oauth_authentication` | `true`, `false` | `false` |
+| `is_hns_enabled` | `true`, `false` | `false` |
+| `nfsv3_enabled` | `true`, `false` | `false` |
+| `cross_tenant_replication_enabled` | `true`, `false` | `true` |
+| `large_file_share_enabled` | `true`, `false` | `null` |
+| `local_user_enabled` | `true`, `false` | `null` (provider default: `true`) |
+| `sftp_enabled` | `true`, `false` | `null` — requires `is_hns_enabled = true` |
+| `allowed_copy_scope` | `AAD`, `PrivateLink` | `null` |
+| `dns_endpoint_type` | `Standard`, `AzureDnsZone` | `null` — forces new resource |
+| `infrastructure_encryption_enabled` | `true`, `false` | `null` — forces new resource |
+| `provisioned_billing_model_version` | `V2` | `null` — FileStorage only, forces new resource |
+| `queue_encryption_key_type` | `Service`, `Account` | `null` — forces new resource |
+| `table_encryption_key_type` | `Service`, `Account` | `null` — forces new resource |
+| `edge_zone` | Edge Zone name | `null` — forces new resource |
+
+### Optional — blocks
+
+| Name | Description |
+|------|-------------|
+| `identity` | Managed Identity — `{ type, identity_ids? }` |
+| `custom_domain` | Custom DNS domain — `{ name, use_subdomain? }` |
+| `customer_managed_key` | CMK encryption — `{ key_vault_key_id?, managed_hsm_key_id?, user_assigned_identity_id }` |
+| `blob_properties` | Blob service settings — versioning, change feed, soft delete, CORS, restore policy |
+| `queue_properties` | Queue service settings — logging, minute/hour metrics, CORS |
+| `share_properties` | Files service settings — retention, SMB config, CORS |
+| `azure_files_authentication` | AD/AADDS/AADKERB auth — `{ directory_type, default_share_level_permission?, active_directory? }` |
+| `routing` | Routing preferences — `{ publish_internet_endpoints?, publish_microsoft_endpoints?, choice? }` |
+| `immutability_policy` | Account-level WORM — `{ allow_protected_append_writes, state, period_since_creation_in_days }` — forces new resource |
+| `static_website` | `true` for defaults, or `{ index_document?, error_404_document? }` |
+| `network_rules` | `{ default_action, ip_rules?, virtual_network_subnet?, bypass? }` |
+| `sas_policy` | `{ expiration_period, expiration_action? }` — only when `shared_access_key_enabled = true` |
+| `private_endpoint` | Map of private endpoints — see `ESLZ/storage-account.tfvars` for full example |
+
+See [ESLZ/storage-account.tfvars](ESLZ/storage-account.tfvars) for a complete commented example.
+
