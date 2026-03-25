@@ -253,6 +253,22 @@ resource "azurerm_storage_account" "storage-account" {
     }
   }
 
+  dynamic "blob_properties" {
+    for_each = can(var.storage_account.blob_properties) ? { blob_properties = var.storage_account.blob_properties } : {}
+
+    content {
+      
+      dynamic "delete_retention_policy" {
+        for_each = can(blob_properties.value.delete_retention_policy) ? { delete_retention_policy = blob_properties.value.delete_retention_policy } : {}
+
+        content {
+          days = lookup(delete_retention_policy.value, "days", null)
+          permanent_delete_enabled = lookup(delete_retention_policy.value, "permanent_delete_enabled", false)
+        }
+      }
+    }
+  }
+  
   # Tags - Merging tags provided by ESLZ with tags provided by the user
   tags = merge(var.tags, try(var.storage_account.tags, {}))
 
