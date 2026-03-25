@@ -66,3 +66,49 @@ For more information about storage account parameters, refer to the terraform do
 | <a name="network_rules"></a> [network_rules](#network\_rules) | See terraform docs | null | no |
 | <a name="sas_policies"></a> [sas_policies](#sas\_policies) | See terraform docs | null | no |
 | <a name="private_endpoint"></a> [private_endpoint](#private\_endpoint) | See private_endpoint module docs | null | no |
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_private_endpoint"></a> [private\_endpoint](#module\_private\_endpoint) | github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git | v1.0.2 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_storage_account.storage-account](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_env"></a> [env](#input\_env) | (Required) env value | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Azure location where the storage account will be situated | `string` | `"canadacentral"` | no |
+| <a name="input_private_dns_zone_ids"></a> [private\_dns\_zone\_ids](#input\_private\_dns\_zone\_ids) | Object containing the private DNS zone IDs of the subscription. Used to configure private endpoints | `any` | `{}` | no |
+| <a name="input_private_endpoint"></a> [private\_endpoint](#input\_private\_endpoint) | Object containing parameter to the private endpoint attached to the storage account | `any` | `{}` | no |
+| <a name="input_resource_groups"></a> [resource\_groups](#input\_resource\_groups) | (Required) Resource group object of the storage account | `any` | `{}` | no |
+| <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | (Required) Object describing the storage account | `any` | `{}` | no |
+| <a name="input_subnets"></a> [subnets](#input\_subnets) | List of subnets objects | `any` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to be applied to the storage account | `map(string)` | `{}` | no |
+| <a name="input_userDefinedString"></a> [userDefinedString](#input\_userDefinedString) | (Required) UserDefinedString part of the name of the storage account | `string` | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_id"></a> [id](#output\_id) | Returns the ID of the storage account |
+| <a name="output_name"></a> [name](#output\_name) | Returns the name of the storage account |
+| <a name="output_storage-account-object"></a> [storage-account-object](#output\_storage-account-object) | Returns the Azure Storage Account object |
+<!-- END_TF_DOCS -->
