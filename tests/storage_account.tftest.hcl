@@ -248,6 +248,48 @@ run "queue_properties_absent" {
 }
 
 # ---------------------------------------------------------------------------
+# queue_properties_metrics_disabled_legacy
+# Legacy minute_metrics/hour_metrics.enabled = false suppresses those blocks
+# ---------------------------------------------------------------------------
+run "queue_properties_metrics_disabled_legacy" {
+  command = plan
+
+  variables {
+    storage_account = {
+      resource_group           = "Project"
+      account_tier             = "Standard"
+      account_replication_type = "LRS"
+      queue_properties = {
+        logging = {
+          delete  = true
+          read    = true
+          write   = true
+          version = "1.0"
+        }
+        minute_metrics = {
+          enabled = false
+          version = "1.0"
+        }
+        hour_metrics = {
+          enabled = false
+          version = "1.0"
+        }
+      }
+    }
+  }
+
+  assert {
+    condition     = length(azurerm_storage_account_queue_properties.storage-account["enabled"].minute_metrics) == 0
+    error_message = "minute_metrics block must not be rendered when enabled = false"
+  }
+
+  assert {
+    condition     = length(azurerm_storage_account_queue_properties.storage-account["enabled"].hour_metrics) == 0
+    error_message = "hour_metrics block must not be rendered when enabled = false"
+  }
+}
+
+# ---------------------------------------------------------------------------
 # customer_managed_key
 # customer_managed_key only supports key_vault_key_id in azurerm v5 (managed_hsm_key_id removed)
 # ---------------------------------------------------------------------------

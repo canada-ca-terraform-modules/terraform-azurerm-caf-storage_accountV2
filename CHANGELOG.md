@@ -22,7 +22,7 @@ This file must be updated as part of every change to this module.
 
 - Bumped `azurerm` provider requirement from `~> 4.0` to `~> 5.0` in [providers.tf](providers.tf).
 - `static_website` is now rendered via a dedicated `azurerm_storage_account_static_website` resource instead of an inline block (removed by azurerm v5). The `storage_account.static_website` tfvars input shape (`true` or `{ index_document?, error_404_document? }`) is unchanged.
-- `queue_properties` is now rendered via a dedicated `azurerm_storage_account_queue_properties` resource instead of an inline block (removed by azurerm v5). The `minute_metrics` / `hour_metrics` sub-blocks no longer accept an `enabled` field — existing tfvars that still set it are silently ignored (no plan error).
+- `queue_properties` is now rendered via a dedicated `azurerm_storage_account_queue_properties` resource instead of an inline block (removed by azurerm v5). The `minute_metrics` / `hour_metrics` sub-blocks no longer accept an `enabled` field; for backward compatibility, legacy tfvars that set `enabled = false` suppress those blocks.
 - Bumped `private_endpoint` child module reference from `v1.0.2` to `v1.1.0` in [module.tf](module.tf).
 - Bumped this module's own `ESLZ/storage-account.tf` example source ref from `v1.1.0` to `v1.2.0`.
 - Regenerated [README.md](README.md) (terraform-docs) and updated `ESLZ/storage-account.tfvars` example comments to match the above.

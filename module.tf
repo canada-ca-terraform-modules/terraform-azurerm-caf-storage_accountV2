@@ -244,7 +244,7 @@ resource "azurerm_storage_account_queue_properties" "storage-account" {
   }
 
   dynamic "minute_metrics" {
-    for_each = try(var.storage_account.queue_properties.minute_metrics, null) != null ? [1] : []
+    for_each = try(var.storage_account.queue_properties.minute_metrics, null) != null && try(var.storage_account.queue_properties.minute_metrics.enabled, true) ? [1] : []
     content {
       version               = var.storage_account.queue_properties.minute_metrics.version
       include_apis          = try(var.storage_account.queue_properties.minute_metrics.include_apis, null)
@@ -253,7 +253,7 @@ resource "azurerm_storage_account_queue_properties" "storage-account" {
   }
 
   dynamic "hour_metrics" {
-    for_each = try(var.storage_account.queue_properties.hour_metrics, null) != null ? [1] : []
+    for_each = try(var.storage_account.queue_properties.hour_metrics, null) != null && try(var.storage_account.queue_properties.hour_metrics.enabled, true) ? [1] : []
     content {
       version               = var.storage_account.queue_properties.hour_metrics.version
       include_apis          = try(var.storage_account.queue_properties.hour_metrics.include_apis, null)

@@ -74,7 +74,8 @@ storageaccounts = {
 
     # Optional: Queue service properties (Standard StorageV2 or Storage only)
     # Note: rendered as a dedicated azurerm_storage_account_queue_properties resource (azurerm v5). At least one of
-    # logging, minute_metrics, hour_metrics or cors_rule must be set. minute_metrics/hour_metrics no longer accept "enabled".
+    # logging, minute_metrics, hour_metrics or cors_rule must be set. minute_metrics/hour_metrics no longer accept "enabled"
+    # in azurerm v5, but legacy "enabled = false" is still honored to suppress those blocks.
     # queue_properties = {
     #   logging = {
     #     delete                = true   # Required
