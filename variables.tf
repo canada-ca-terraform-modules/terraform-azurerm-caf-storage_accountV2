@@ -44,6 +44,7 @@ variable "private_dns_zone_ids" {
   default     = {}
 }
 
+#tflint-ignore: terraform_unused_declarations
 variable "private_endpoint" {
   description = "Object containing parameter to the private endpoint attached to the storage account"
   type        = any

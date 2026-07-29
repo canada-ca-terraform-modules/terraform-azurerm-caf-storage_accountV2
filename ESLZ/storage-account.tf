@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 1.9"
+}
+
 variable "storageaccounts" {
   description = "Storage accounts to deploy"
   type        = any
@@ -5,7 +9,7 @@ variable "storageaccounts" {
 }
 
 module "storage-account" {
-  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-storage_accountV2.git?ref=v1.1.0"
+  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-storage_accountV2.git?ref=v1.2.0"
   for_each = var.storageaccounts
 
   userDefinedString    = each.key

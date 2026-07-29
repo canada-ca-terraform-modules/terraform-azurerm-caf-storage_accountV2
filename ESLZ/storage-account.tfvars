@@ -34,8 +34,7 @@ storageaccounts = {
 
     # Optional: Customer managed key encryption (requires UserAssigned identity)
     # customer_managed_key = {
-    #   key_vault_key_id          = "<key-vault-key-id>"          # Optional: Exactly one of key_vault_key_id or managed_hsm_key_id
-    #   managed_hsm_key_id        = "<managed-hsm-key-id>"        # Optional: Exactly one of key_vault_key_id or managed_hsm_key_id
+    #   key_vault_key_id          = "<key-vault-key-id>"          # Required: managed_hsm_key_id was removed in azurerm v5, use key_vault_key_id only
     #   user_assigned_identity_id = "<user-assigned-identity-id>" # Required
     # }
 
@@ -74,6 +73,8 @@ storageaccounts = {
     # }
 
     # Optional: Queue service properties (Standard StorageV2 or Storage only)
+    # Note: rendered as a dedicated azurerm_storage_account_queue_properties resource (azurerm v5). At least one of
+    # logging, minute_metrics, hour_metrics or cors_rule must be set. minute_metrics/hour_metrics no longer accept "enabled".
     # queue_properties = {
     #   logging = {
     #     delete                = true   # Required
@@ -83,13 +84,11 @@ storageaccounts = {
     #     retention_policy_days = 7      # Optional
     #   }
     #   minute_metrics = {
-    #     enabled               = true   # Required
     #     version               = "1.0"  # Required
     #     include_apis          = true   # Optional
     #     retention_policy_days = 7      # Optional
     #   }
     #   hour_metrics = {
-    #     enabled               = true   # Required
     #     version               = "1.0"  # Required
     #     include_apis          = true   # Optional
     #     retention_policy_days = 7      # Optional
@@ -139,6 +138,7 @@ storageaccounts = {
     # }
 
     # Optional: Static website — set to true for defaults or supply an object for custom documents
+    # Note: rendered as a dedicated azurerm_storage_account_static_website resource (azurerm v5)
     # static_website = true
     # static_website = {
     #   index_document     = "index.html"  # Optional: Default: index.html
