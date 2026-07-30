@@ -1,6 +1,10 @@
+# terraform-azurerm-caf-storage_accountV2
+
+CAF-compliant Terraform module for creating an Azure Storage Account, with optional private endpoint, customer managed key, static website and queue properties support.
+
 ## Requirements
 
-Terraform >= 1.9 (terragrunt 0.68.4+) · azurerm provider `~> 4.0`
+Terraform >= 1.9 (terragrunt 0.68.4+) · azurerm provider `~> 5.0`
 
 ## Providers
 
@@ -12,7 +16,7 @@ Terraform >= 1.9 (terragrunt 0.68.4+) · azurerm provider `~> 4.0`
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_private_endpoint"></a> [private\_endpoint](#module\_private\_endpoint) | github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint | v1.0.2 |
+| <a name="module_private_endpoint"></a> [private\_endpoint](#module\_private\_endpoint) | github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint | v1.2.0 |
 
 ## Resources
 
@@ -88,14 +92,14 @@ All parameters are set inside the `storage_account` object key in your tfvars.
 |------|-------------|
 | `identity` | Managed Identity — `{ type, identity_ids? }` |
 | `custom_domain` | Custom DNS domain — `{ name, use_subdomain? }` |
-| `customer_managed_key` | CMK encryption — `{ key_vault_key_id?, managed_hsm_key_id?, user_assigned_identity_id }` |
+| `customer_managed_key` | CMK encryption — `{ key_vault_key_id, user_assigned_identity_id }` (managed_hsm_key_id removed in azurerm v5) |
 | `blob_properties` | Blob service settings — versioning, change feed, soft delete, CORS, restore policy |
-| `queue_properties` | Queue service settings — logging, minute/hour metrics, CORS |
+| `queue_properties` | Queue service settings — rendered as a dedicated `azurerm_storage_account_queue_properties` resource (azurerm v5) — logging, minute/hour metrics, CORS |
 | `share_properties` | Files service settings — retention, SMB config, CORS |
 | `azure_files_authentication` | AD/AADDS/AADKERB auth — `{ directory_type, default_share_level_permission?, active_directory? }` |
 | `routing` | Routing preferences — `{ publish_internet_endpoints?, publish_microsoft_endpoints?, choice? }` |
 | `immutability_policy` | Account-level WORM — `{ allow_protected_append_writes, state, period_since_creation_in_days }` — forces new resource |
-| `static_website` | `true` for defaults, or `{ index_document?, error_404_document? }` |
+| `static_website` | Rendered as a dedicated `azurerm_storage_account_static_website` resource (azurerm v5) — `true` for defaults, or `{ index_document?, error_404_document? }` |
 | `network_rules` | `{ default_action, ip_rules?, virtual_network_subnet?, bypass? }` |
 | `sas_policy` | `{ expiration_period, expiration_action? }` — only when `shared_access_key_enabled = true` |
 | `private_endpoint` | Map of private endpoints — see `ESLZ/storage-account.tfvars` for full example |
@@ -109,25 +113,27 @@ See [ESLZ/storage-account.tfvars](ESLZ/storage-account.tfvars) for a complete co
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 5.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_private_endpoint"></a> [private\_endpoint](#module\_private\_endpoint) | github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git | v1.0.2 |
+| <a name="module_private_endpoint"></a> [private\_endpoint](#module\_private\_endpoint) | github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git | v1.2.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [azurerm_storage_account.storage-account](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account) | resource |
+| [azurerm_storage_account_queue_properties.storage-account](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account_queue_properties) | resource |
+| [azurerm_storage_account_static_website.storage-account](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account_static_website) | resource |
 
 ## Inputs
 

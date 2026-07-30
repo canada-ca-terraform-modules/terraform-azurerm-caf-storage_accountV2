@@ -155,6 +155,11 @@ run "static_website_bool" {
       static_website           = true
     }
   }
+
+  assert {
+    condition     = azurerm_storage_account_static_website.storage-account["enabled"].index_document == "index.html"
+    error_message = "static_website index_document must default to index.html"
+  }
 }
 
 # ---------------------------------------------------------------------------
@@ -174,6 +179,142 @@ run "static_website_object" {
         error_404_document = "404.html"
       }
     }
+  }
+
+  assert {
+    condition     = azurerm_storage_account_static_website.storage-account["enabled"].index_document == "home.html"
+    error_message = "static_website index_document must be home.html"
+  }
+}
+
+# ---------------------------------------------------------------------------
+# static_website_absent
+# No static_website resource is created when the argument is omitted
+# ---------------------------------------------------------------------------
+run "static_website_absent" {
+  command = plan
+
+  assert {
+    condition     = length(azurerm_storage_account_static_website.storage-account) == 0
+    error_message = "static_website resource must not be created when unset"
+  }
+}
+
+# ---------------------------------------------------------------------------
+# queue_properties
+# Queue properties are created as a dedicated resource (azurerm v5)
+# ---------------------------------------------------------------------------
+run "queue_properties" {
+  command = plan
+
+  variables {
+    storage_account = {
+      resource_group           = "Project"
+      account_tier             = "Standard"
+      account_replication_type = "LRS"
+      queue_properties = {
+        logging = {
+          delete                = true
+          read                  = true
+          write                 = true
+          version               = "1.0"
+          retention_policy_days = 7
+        }
+        hour_metrics = {
+          version               = "1.0"
+          retention_policy_days = 7
+        }
+      }
+    }
+  }
+
+  assert {
+    condition     = length(azurerm_storage_account_queue_properties.storage-account) == 1
+    error_message = "queue_properties resource must be created when provided"
+  }
+}
+
+# ---------------------------------------------------------------------------
+# queue_properties_absent
+# No queue_properties resource is created when the argument is omitted
+# ---------------------------------------------------------------------------
+run "queue_properties_absent" {
+  command = plan
+
+  assert {
+    condition     = length(azurerm_storage_account_queue_properties.storage-account) == 0
+    error_message = "queue_properties resource must not be created when unset"
+  }
+}
+
+# ---------------------------------------------------------------------------
+# queue_properties_metrics_disabled_legacy
+# Legacy minute_metrics/hour_metrics.enabled = false suppresses those blocks
+# ---------------------------------------------------------------------------
+run "queue_properties_metrics_disabled_legacy" {
+  command = plan
+
+  variables {
+    storage_account = {
+      resource_group           = "Project"
+      account_tier             = "Standard"
+      account_replication_type = "LRS"
+      queue_properties = {
+        logging = {
+          delete  = true
+          read    = true
+          write   = true
+          version = "1.0"
+        }
+        minute_metrics = {
+          enabled = false
+          version = "1.0"
+        }
+        hour_metrics = {
+          enabled = false
+          version = "1.0"
+        }
+      }
+    }
+  }
+
+  assert {
+    condition     = length(azurerm_storage_account_queue_properties.storage-account["enabled"].minute_metrics) == 0
+    error_message = "minute_metrics block must not be rendered when enabled = false"
+  }
+
+  assert {
+    condition     = length(azurerm_storage_account_queue_properties.storage-account["enabled"].hour_metrics) == 0
+    error_message = "hour_metrics block must not be rendered when enabled = false"
+  }
+}
+
+# ---------------------------------------------------------------------------
+# customer_managed_key
+# customer_managed_key only supports key_vault_key_id in azurerm v5 (managed_hsm_key_id removed)
+# ---------------------------------------------------------------------------
+run "customer_managed_key" {
+  command = plan
+
+  variables {
+    storage_account = {
+      resource_group           = "Project"
+      account_tier             = "Standard"
+      account_replication_type = "LRS"
+      identity = {
+        type         = "UserAssigned"
+        identity_ids = ["/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.ManagedIdentity/userAssignedIdentities/test-uami"]
+      }
+      customer_managed_key = {
+        key_vault_key_id          = "https://test-kv.vault.azure.net/keys/test-key/0000000000000000000000000000000"
+        user_assigned_identity_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.ManagedIdentity/userAssignedIdentities/test-uami"
+      }
+    }
+  }
+
+  assert {
+    condition     = azurerm_storage_account.storage-account.customer_managed_key[0].key_vault_key_id == "https://test-kv.vault.azure.net/keys/test-key/0000000000000000000000000000000"
+    error_message = "customer_managed_key.key_vault_key_id must be set"
   }
 }
 

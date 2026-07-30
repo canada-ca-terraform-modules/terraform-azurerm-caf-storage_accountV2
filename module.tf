@@ -56,11 +56,11 @@ resource "azurerm_storage_account" "storage-account" {
   }
 
   # Customer managed key (requires identity block with UserAssigned)
+  # Note: managed_hsm_key_id was removed in azurerm v5 - use key_vault_key_id only
   dynamic "customer_managed_key" {
     for_each = try(var.storage_account.customer_managed_key, null) != null ? [1] : []
     content {
       key_vault_key_id          = try(var.storage_account.customer_managed_key.key_vault_key_id, null)
-      managed_hsm_key_id        = try(var.storage_account.customer_managed_key.managed_hsm_key_id, null)
       user_assigned_identity_id = var.storage_account.customer_managed_key.user_assigned_identity_id
     }
   }
@@ -105,54 +105,6 @@ resource "azurerm_storage_account" "storage-account" {
         for_each = try(var.storage_account.blob_properties.container_delete_retention_policy, null) != null ? [1] : []
         content {
           days = try(var.storage_account.blob_properties.container_delete_retention_policy.days, 7)
-        }
-      }
-    }
-  }
-
-  # Queue properties (Standard StorageV2 or Storage only)
-  dynamic "queue_properties" {
-    for_each = try(var.storage_account.queue_properties, null) != null ? [1] : []
-    content {
-      dynamic "cors_rule" {
-        for_each = try(var.storage_account.queue_properties.cors_rule, [])
-        content {
-          allowed_headers    = cors_rule.value.allowed_headers
-          allowed_methods    = cors_rule.value.allowed_methods
-          allowed_origins    = cors_rule.value.allowed_origins
-          exposed_headers    = cors_rule.value.exposed_headers
-          max_age_in_seconds = cors_rule.value.max_age_in_seconds
-        }
-      }
-
-      dynamic "logging" {
-        for_each = try(var.storage_account.queue_properties.logging, null) != null ? [1] : []
-        content {
-          delete                = var.storage_account.queue_properties.logging.delete
-          read                  = var.storage_account.queue_properties.logging.read
-          version               = var.storage_account.queue_properties.logging.version
-          write                 = var.storage_account.queue_properties.logging.write
-          retention_policy_days = try(var.storage_account.queue_properties.logging.retention_policy_days, null)
-        }
-      }
-
-      dynamic "minute_metrics" {
-        for_each = try(var.storage_account.queue_properties.minute_metrics, null) != null ? [1] : []
-        content {
-          enabled               = var.storage_account.queue_properties.minute_metrics.enabled
-          version               = var.storage_account.queue_properties.minute_metrics.version
-          include_apis          = try(var.storage_account.queue_properties.minute_metrics.include_apis, null)
-          retention_policy_days = try(var.storage_account.queue_properties.minute_metrics.retention_policy_days, null)
-        }
-      }
-
-      dynamic "hour_metrics" {
-        for_each = try(var.storage_account.queue_properties.hour_metrics, null) != null ? [1] : []
-        content {
-          enabled               = var.storage_account.queue_properties.hour_metrics.enabled
-          version               = var.storage_account.queue_properties.hour_metrics.version
-          include_apis          = try(var.storage_account.queue_properties.hour_metrics.include_apis, null)
-          retention_policy_days = try(var.storage_account.queue_properties.hour_metrics.retention_policy_days, null)
         }
       }
     }
@@ -234,16 +186,6 @@ resource "azurerm_storage_account" "storage-account" {
     }
   }
 
-  # Static website — accepts true (boolean) for defaults or an object with custom documents
-  # Note: deprecated in azurerm v4, superseded by azurerm_storage_account_static_website in v5
-  dynamic "static_website" {
-    for_each = try(tobool(var.storage_account.static_website), var.storage_account.static_website != null, false) == true ? [1] : []
-    content {
-      index_document     = try(var.storage_account.static_website.index_document, "index.html")
-      error_404_document = try(var.storage_account.static_website.error_404_document, null)
-    }
-  }
-
   # SAS policy - only valid if shared key access is enabled
   dynamic "sas_policy" {
     for_each = try(var.storage_account.shared_access_key_enabled, false) == true ? [1] : []
@@ -262,9 +204,67 @@ resource "azurerm_storage_account" "storage-account" {
   }
 }
 
+# Static website - superseded the inline static_website block in azurerm v5.
+# Accepts true (boolean) for defaults or an object with custom documents
+resource "azurerm_storage_account_static_website" "storage-account" {
+  for_each = try(tobool(var.storage_account.static_website), var.storage_account.static_website != null, false) == true ? { enabled = true } : {}
+
+  storage_account_id = azurerm_storage_account.storage-account.id
+  index_document     = try(var.storage_account.static_website.index_document, "index.html")
+  error_404_document = try(var.storage_account.static_website.error_404_document, null)
+}
+
+# Queue properties - superseded the inline queue_properties block in azurerm v5.
+# Note: the provider requires at least one of cors_rule, logging, minute_metrics or hour_metrics to be set
+resource "azurerm_storage_account_queue_properties" "storage-account" {
+  for_each = try(var.storage_account.queue_properties, null) != null ? { enabled = true } : {}
+
+  storage_account_id = azurerm_storage_account.storage-account.id
+
+  dynamic "cors_rule" {
+    for_each = try(var.storage_account.queue_properties.cors_rule, [])
+    content {
+      allowed_headers    = cors_rule.value.allowed_headers
+      allowed_methods    = cors_rule.value.allowed_methods
+      allowed_origins    = cors_rule.value.allowed_origins
+      exposed_headers    = cors_rule.value.exposed_headers
+      max_age_in_seconds = cors_rule.value.max_age_in_seconds
+    }
+  }
+
+  dynamic "logging" {
+    for_each = try(var.storage_account.queue_properties.logging, null) != null ? [1] : []
+    content {
+      delete                = var.storage_account.queue_properties.logging.delete
+      read                  = var.storage_account.queue_properties.logging.read
+      version               = var.storage_account.queue_properties.logging.version
+      write                 = var.storage_account.queue_properties.logging.write
+      retention_policy_days = try(var.storage_account.queue_properties.logging.retention_policy_days, null)
+    }
+  }
+
+  dynamic "minute_metrics" {
+    for_each = try(var.storage_account.queue_properties.minute_metrics, null) != null && try(var.storage_account.queue_properties.minute_metrics.enabled, true) ? [1] : []
+    content {
+      version               = var.storage_account.queue_properties.minute_metrics.version
+      include_apis          = try(var.storage_account.queue_properties.minute_metrics.include_apis, null)
+      retention_policy_days = try(var.storage_account.queue_properties.minute_metrics.retention_policy_days, null)
+    }
+  }
+
+  dynamic "hour_metrics" {
+    for_each = try(var.storage_account.queue_properties.hour_metrics, null) != null && try(var.storage_account.queue_properties.hour_metrics.enabled, true) ? [1] : []
+    content {
+      version               = var.storage_account.queue_properties.hour_metrics.version
+      include_apis          = try(var.storage_account.queue_properties.hour_metrics.include_apis, null)
+      retention_policy_days = try(var.storage_account.queue_properties.hour_metrics.retention_policy_days, null)
+    }
+  }
+}
+
 # Calls this module if we need a private endpoint attached to the storage account
 module "private_endpoint" {
-  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.0.2"
+  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.2.0"
   for_each = try(var.storage_account.private_endpoint, {})
 
   name                           = "${local.storage_account-name}-${each.key}"
