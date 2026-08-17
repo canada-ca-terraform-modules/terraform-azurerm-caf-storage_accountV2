@@ -150,7 +150,7 @@ storageaccounts = {
     # network_rules = {
     #   default_action             = "Deny"            # Default: Deny
     #   ip_rules                   = []                # List of public IPs permitted to access the storage account
-    #   virtual_network_subnet_ids = ["MAZ", "OZ"]     # List of subnets permitted. Values can be subnet name (MAZ, OZ) or subnet ID
+    #   virtual_network_subnet = ["MAZ", "OZ"]          # List of subnets permitted. Values can be subnet name (MAZ, OZ) or subnet ID
     #   bypass                     = ["AzureServices"] # Default: AzureServices. List of services allowed to bypass firewall
     # }
 
@@ -158,14 +158,6 @@ storageaccounts = {
     # sas_policy = {
     #   expiration_period = "90.00:00:00" # Required: Format is DD.HH:MM:SS
     #   expiration_action = "Log"         # Optional: Log or Block. Default: Log
-    # }
-
-    # Optional: Configure blob service properties
-    # blob_properties = {
-    #   delete_retention_policy = {
-    #     days                     = 7     # Optional: Number of days to retain soft-deleted blobs
-    #     permanent_delete_enabled = false # Optional: Enable permanent deletion for soft-deleted blobs
-    #   }
     # }
 
     # Optional: Defines a private endpoint for the storage account

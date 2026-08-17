@@ -5,6 +5,13 @@ All notable changes to this module are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This file must be updated as part of every change to this module.
 
+## [1.2.2] - 2026-08-17
+
+### Fixed
+
+- `ESLZ/storage-account.tfvars`: Corrected `virtual_network_subnet_ids` to `virtual_network_subnet` in the commented `network_rules` example — the old key didn't match what `locals.tf` reads, so uncommenting it would silently produce empty subnet rules.
+- `ESLZ/storage-account.tfvars`: Removed duplicate `blob_properties` block (partial copy near end of file was redundant with the comprehensive example at line 48).
+
 ## [1.2.1] - 2026-07-29
 
 ### Changed
