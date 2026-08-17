@@ -150,7 +150,7 @@ storageaccounts = {
     # network_rules = {
     #   default_action             = "Deny"            # Default: Deny
     #   ip_rules                   = []                # List of public IPs permitted to access the storage account
-    #   virtual_network_subnet = ["MAZ", "OZ"]          # List of subnets permitted. Values can be subnet name (MAZ, OZ) or subnet ID
+    #   virtual_network_subnet     = ["MAZ", "OZ"]     # List of subnets permitted. Values can be subnet name (MAZ, OZ) or subnet ID
     #   bypass                     = ["AzureServices"] # Default: AzureServices. List of services allowed to bypass firewall
     # }
 
